@@ -1,8 +1,10 @@
 package tw.training.homework.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -12,6 +14,8 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "commodity")
 public class Commodity {
@@ -23,13 +27,12 @@ public class Commodity {
 
     private String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "price_id", nullable = false)
     private Price price;
 
-    @OneToMany
-    @JoinColumn(name = "url", nullable = false)
-    @Column(name = "image_urls")
-    private List<Image> imagesUrl;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "sku")
+    private List<Image> imageUrls;
 
 }

@@ -7,8 +7,14 @@ CREATE TABLE `customer`
 
 CREATE TABLE `price`
 (
-    price_id       BIGINT       PRIMARY KEY,
+    price_id       BIGINT AUTO_INCREMENT  PRIMARY KEY,
     amount         INT          NOT NULL
+);
+
+CREATE TABLE `image`
+(
+    url            varchar(128) PRIMARY KEY,
+    alternate_text  varchar(256) NULL
 );
 
 CREATE TABLE `shipping_address`
@@ -23,7 +29,7 @@ CREATE TABLE `commodity`
 (
     sku            varchar(64)  PRIMARY KEY,
     title          varchar(64)  NOT NULL,
-    description    varchar(256) NOT NULL,
+    description    varchar(256) NULL,
     price_id       BIGINT       NOT NULL,
     FOREIGN KEY (price_id) REFERENCES price(price_id)
 );
@@ -41,12 +47,4 @@ CREATE TABLE `order`
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (sku) REFERENCES commodity(sku),
     FOREIGN KEY (address_id) REFERENCES shipping_address(address_id)
-);
-
-CREATE TABLE `image`
-(
-    url            varchar(128) PRIMARY KEY,
-    alternateText  varchar(256) NOT NULL,
-    sku            varchar(64) NOT NULL,
-    FOREIGN KEY (sku) REFERENCES commodity(sku)
 );

@@ -3,6 +3,7 @@ package tw.training.homework.model;
 
 import lombok.Getter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,17 +32,16 @@ public class Order {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "sku", nullable = false)
     private Commodity commodity;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    @Column(name = "shipping_address")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", nullable = false)
     private ShippingAddress shippingAddress;
 
 }
