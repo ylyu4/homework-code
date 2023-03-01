@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tw.training.homework.model.request.AccountRequest;
+import tw.training.homework.model.response.TokenResponse;
 import tw.training.homework.service.AuthService;
 
 import javax.validation.Valid;
@@ -20,6 +21,11 @@ public class AuthController {
     @PostMapping("/signup")
     public void signUpForUser(@RequestBody @Valid AccountRequest accountRequest) {
         authService.createNewAccount(accountRequest);
+    }
+
+    @PostMapping("/login")
+    public TokenResponse login(@RequestBody AccountRequest accountRequest) {
+        return authService.getTokenAfterLogin(accountRequest);
     }
 
 }
