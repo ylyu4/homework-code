@@ -2,7 +2,7 @@ CREATE TABLE `customer`
 (
     customer_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
     username       varchar(32)  NOT NULL,
-    password       varchar(32)  NOT NULL
+    password       varchar(128)  NOT NULL
 );
 
 CREATE TABLE `price`
