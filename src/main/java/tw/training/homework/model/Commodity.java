@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -15,12 +18,15 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "commodity")
 public class Commodity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     private String sku;
 
     private String title;
@@ -28,11 +34,22 @@ public class Commodity {
     private String description;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "price_id", nullable = false)
+    @JoinColumn(name = "commodity_id",  nullable = false)
     private Price price;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "sku")
-    private List<Image> imageUrls;
+    @JoinColumn(name = "commodity_id", nullable = false)
+    private List<Image> images;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "commodity_id")
+    private List<Order> orders;
+
+    public Commodity(String sku, String title, String description, Price price, List<Image> images) {
+        this.sku = sku;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.images = images;
+    }
 }

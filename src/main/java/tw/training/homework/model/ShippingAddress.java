@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Getter
@@ -16,8 +17,8 @@ public class ShippingAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
-    private Long addressId;
+    @Column(name = "id")
+    private Long id;
 
     private String address;
 
@@ -26,5 +27,8 @@ public class ShippingAddress {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToOne(mappedBy = "shippingAddress")
+    private Order order;
 
 }

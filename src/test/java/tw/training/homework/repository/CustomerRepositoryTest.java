@@ -27,7 +27,7 @@ class CustomerRepositoryTest {
     @Test
     void should_find_the_existed_customer() {
         // given
-        Customer customer = new Customer(1L, "username", "password");
+        Customer customer = new Customer("username", "password");
         entityManager.persist(customer);
 
         // when

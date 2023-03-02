@@ -21,7 +21,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/user/signup", "/user/login");
+        return (web) -> web.ignoring().antMatchers("/user/signup", "/user/login", "/admin/commodities");
     }
 
 

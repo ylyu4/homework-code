@@ -23,12 +23,10 @@ public class AuthService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final AtomicLong customerId = new AtomicLong();
-
     public void createNewAccount(AccountRequest accountRequest) {
         validateUsernameIsRegistered(accountRequest.getUsername());
 
-        Customer customer = new Customer(customerId.incrementAndGet(), accountRequest.getUsername(),
+        Customer customer = new Customer(accountRequest.getUsername(),
                 bCryptPasswordEncoder.encode(accountRequest.getPassword()));
 
         customerRepository.save(customer);
@@ -39,7 +37,7 @@ public class AuthService {
         validateUsername(username);
         Customer customer = customerRepository.findByUsername(username).get();
         validatePassword(accountRequest.getPassword(), customer.getPassword());
-        return new TokenResponse(JwtUtils.generateToken(customer.getCustomerId(), username));
+        return new TokenResponse(JwtUtils.generateToken(customer.getId(), username));
     }
 
     private boolean isUsernameRegistered(String username) {
