@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tw.training.homework.exception.CommodityDuplicateException;
+import tw.training.homework.exception.CommodityNotFoundException;
 import tw.training.homework.exception.CredentialsIncorrectException;
 import tw.training.homework.exception.ErrorBody;
 import tw.training.homework.exception.CustomerNotFoundException;
@@ -23,8 +24,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorBody> handle(CustomerNotFoundException exception) {
+    @ExceptionHandler({CustomerNotFoundException.class,
+                       CommodityNotFoundException.class})
+    public ResponseEntity<ErrorBody> handleNotFoundException(Exception exception) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorBody body = new ErrorBody(status.value(), exception.getMessage());
         return ResponseEntity.status(status).body(body);
