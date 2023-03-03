@@ -8,19 +8,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import tw.training.homework.exception.CommodityDuplicateException;
 import tw.training.homework.exception.CredentialsIncorrectException;
 import tw.training.homework.exception.ErrorBody;
-import tw.training.homework.exception.JwtTokenValidationException;
 import tw.training.homework.exception.CustomerNotFoundException;
 import tw.training.homework.exception.UsernameExistedException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorBody> handle(JwtTokenValidationException exception) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        ErrorBody body = new ErrorBody(status.value(), exception.getMessage());
-        return ResponseEntity.status(status).body(body);
-    }
 
     @ExceptionHandler({UsernameExistedException.class,
                        CredentialsIncorrectException.class,

@@ -1,5 +1,6 @@
 package tw.training.homework.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Price {
 
     private Integer amount;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "price")
     private Commodity commodity;
 

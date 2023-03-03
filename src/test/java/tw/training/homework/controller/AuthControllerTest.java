@@ -54,7 +54,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

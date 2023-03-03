@@ -21,6 +21,7 @@ public class JwtUtils {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("userName", username);
+        map.put("authority", "user");
         String jwt = Jwts.builder()
                 .setClaims(map)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -28,6 +29,12 @@ public class JwtUtils {
                 .compact();
 
         return PREFIX + " " + jwt;
+    }
+
+    public static Map<String, Object> getTokenClaims(String token) {
+
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token.replace(PREFIX, "")).getBody();
+
     }
 
 }
