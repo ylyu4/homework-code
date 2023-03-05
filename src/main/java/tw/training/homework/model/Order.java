@@ -1,6 +1,7 @@
 package tw.training.homework.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,12 +39,20 @@ public class Order {
     @JoinColumn(name = "address_id")
     private ShippingAddress shippingAddress;
 
+    @JsonIgnore
     @ManyToOne
     private Commodity commodity;
+
+    @JsonIgnore
     @ManyToOne
     private Customer customer;
 
 
+    public Order(Integer quantity, Integer totalPrice, OrderStatus orderStatus) {
+        this.quantity = quantity;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus.name();
+    }
     public Order(Integer quantity, Integer totalPrice, OrderStatus orderStatus,
                  Commodity commodity, Customer customer) {
         this.quantity = quantity;
@@ -51,5 +60,12 @@ public class Order {
         this.orderStatus = orderStatus.name();
         this.commodity = commodity;
         this.customer = customer;
+    }
+    public void updateStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus.name();
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 }

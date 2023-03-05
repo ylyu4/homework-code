@@ -1,6 +1,7 @@
 package tw.training.homework.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -10,19 +11,15 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import tw.training.homework.model.request.CommodityRequest;
 import tw.training.homework.model.request.CreateOrderRequest;
+import tw.training.homework.model.request.ShippingAddressRequest;
+import tw.training.homework.model.request.SubmitOrderRequest;
 import tw.training.homework.service.OrderService;
 
-import java.util.Arrays;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
@@ -51,6 +48,19 @@ public class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(createOrderRequest).getJson()))
                         .andExpect(status().isCreated());
+    }
+
+    @Test
+    void should_submit_order_successfully() throws Exception {
+
+        SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(1l, new ShippingAddressRequest("test", "test", "test"));
+
+        doNothing().when(orderService).createOrder(any());
+
+        mockMvc.perform(post("/order/submit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(submitOrderRequest)))
+                .andExpect(status().isCreated());
     }
 
 }

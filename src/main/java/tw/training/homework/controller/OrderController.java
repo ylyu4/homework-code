@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import tw.training.homework.model.request.CreateOrderRequest;
+import tw.training.homework.model.request.SubmitOrderRequest;
 import tw.training.homework.service.OrderService;
 
 import javax.validation.Valid;
@@ -25,4 +26,11 @@ public class OrderController {
     public void createCommodityOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
         orderService.createOrder(createOrderRequest);
     }
+
+    @PostMapping("/submit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void submitCommodityOrder(@RequestBody @Valid SubmitOrderRequest submitOrderRequest) {
+        orderService.submitOrder(submitOrderRequest);
+    }
+
 }

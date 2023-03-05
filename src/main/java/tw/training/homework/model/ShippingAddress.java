@@ -1,6 +1,9 @@
 package tw.training.homework.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import tw.training.homework.model.request.ShippingAddressRequest;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +15,7 @@ import javax.persistence.Table;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "shipping_address")
 public class ShippingAddress {
 
@@ -29,6 +33,12 @@ public class ShippingAddress {
     private String phoneNumber;
 
     @OneToOne(mappedBy = "shippingAddress")
+    @JsonIgnore
     private Order order;
 
+    public ShippingAddress(ShippingAddressRequest request) {
+        this.address = request.getAddress();
+        this.fullName = request.getFullName();
+        this.phoneNumber = request.getPhoneNumber();
+    }
 }

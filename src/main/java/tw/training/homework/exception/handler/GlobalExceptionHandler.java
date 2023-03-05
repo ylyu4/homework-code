@@ -10,6 +10,8 @@ import tw.training.homework.exception.CommodityNotFoundException;
 import tw.training.homework.exception.CredentialsIncorrectException;
 import tw.training.homework.exception.ErrorBody;
 import tw.training.homework.exception.CustomerNotFoundException;
+import tw.training.homework.exception.OrderNotFoundException;
+import tw.training.homework.exception.OrderSubmitMultipleTimesException;
 import tw.training.homework.exception.UsernameExistedException;
 
 @ControllerAdvice
@@ -25,7 +27,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({CustomerNotFoundException.class,
-                       CommodityNotFoundException.class})
+                       CommodityNotFoundException.class,
+                       OrderNotFoundException.class})
     public ResponseEntity<ErrorBody> handleNotFoundException(Exception exception) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorBody body = new ErrorBody(status.value(), exception.getMessage());
@@ -37,6 +40,13 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorBody body = new ErrorBody(status.value(),
                 exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorBody> handle(OrderSubmitMultipleTimesException exception) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorBody body = new ErrorBody(status.value(), exception.getMessage());
         return ResponseEntity.status(status).body(body);
     }
 

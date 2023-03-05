@@ -1,5 +1,6 @@
 package tw.training.homework.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class Commodity {
     private List<Image> images;
 
     @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Order> orders;
 
     public Commodity(String sku, String title, String description, Price price, List<Image> images) {
