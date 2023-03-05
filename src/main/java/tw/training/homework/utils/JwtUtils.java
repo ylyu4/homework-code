@@ -20,7 +20,7 @@ public class JwtUtils {
 
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
-        map.put("userName", username);
+        map.put("username", username);
         map.put("authority", "user");
         String jwt = Jwts.builder()
                 .setClaims(map)

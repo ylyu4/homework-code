@@ -25,6 +25,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -129,7 +130,7 @@ public class AuthControllerTest {
 
         when(authService.getTokenAfterLogin(any())).thenThrow(new CredentialsIncorrectException("The password is incorrect"));
 
-        mockMvc.perform(post("/user/login")
+        mockMvc.perform(get("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isBadRequest())

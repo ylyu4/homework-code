@@ -41,8 +41,7 @@ public class Commodity {
     @JoinColumn(name = "commodity_id", nullable = false)
     private List<Image> images;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "commodity_id")
+    @OneToMany(mappedBy = "commodity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
     public Commodity(String sku, String title, String description, Price price, List<Image> images) {

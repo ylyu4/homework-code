@@ -25,7 +25,6 @@ public class AuthService {
 
     public void createNewAccount(AccountRequest accountRequest) {
         validateUsernameIsRegistered(accountRequest.getUsername());
-
         Customer customer = new Customer(accountRequest.getUsername(),
                 bCryptPasswordEncoder.encode(accountRequest.getPassword()));
 
@@ -34,8 +33,9 @@ public class AuthService {
 
     public TokenResponse getTokenAfterLogin(AccountRequest accountRequest) {
         String username = accountRequest.getUsername();
-        validateUsername(username);
-        Customer customer = customerRepository.findByUsername(username).get();
+        Customer customer = customerRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomerNotFoundException(
+                        String.format("This username: %s is not registered yet.", username)));
         validatePassword(accountRequest.getPassword(), customer.getPassword());
         return new TokenResponse(JwtUtils.generateToken(customer.getId(), username));
     }
@@ -53,12 +53,6 @@ public class AuthService {
     private void validatePassword(String password, String encodePassword) {
         if (!bCryptPasswordEncoder.matches(password, encodePassword)) {
             throw new CredentialsIncorrectException("The password is incorrect");
-        }
-    }
-
-    private void validateUsername(String username) {
-        if (!isUsernameRegistered(username)) {
-            throw new CustomerNotFoundException(String.format("This username: %s is not registered yet.", username));
         }
     }
 

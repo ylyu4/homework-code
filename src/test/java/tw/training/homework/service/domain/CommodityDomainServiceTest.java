@@ -1,4 +1,4 @@
-package tw.training.homework.service;
+package tw.training.homework.service.domain;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,25 +10,23 @@ import tw.training.homework.exception.CommodityNotFoundException;
 import tw.training.homework.model.Commodity;
 import tw.training.homework.model.Image;
 import tw.training.homework.model.Price;
-import tw.training.homework.service.domain.CommodityDomainService;
+import tw.training.homework.repository.CommodityRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-
 @ExtendWith(MockitoExtension.class)
-class CommodityServiceTest {
-
+class CommodityDomainServiceTest {
 
     @InjectMocks
-    private CommodityService commodityService;
+    CommodityDomainService commodityDomainService;
 
     @Mock
-    private CommodityDomainService commodityDomainService;
-
+    CommodityRepository commodityRepository;
 
     private static Commodity commodity1;
 
@@ -48,42 +46,38 @@ class CommodityServiceTest {
                 price, Arrays.asList(image1, image2));
     }
 
-
     @Test
-    void should_find_all_commodities() {
+    void should_get_existed_commodity_successfully() {
         // given
-        when(commodityDomainService.getAllCommodity()).thenReturn(Arrays.asList(commodity1, commodity2));
+        when(commodityRepository.findById(1L)).thenReturn(Optional.of(commodity1));
 
         // when
-        List<Commodity> commodityList = commodityService.getCommodityList();
+        Commodity commodity = commodityDomainService.getCommodityById(1L);
 
         // then
-        assertEquals(2, commodityList.size());
-        assertEquals("sku1", commodityList.get(0).getSku());
-        assertEquals("sku2", commodityList.get(1).getSku());
+        assertEquals("sku1", commodity.getSku());
     }
 
-
     @Test
-    void should_find_commodity_by_id_successfully() {
+    void should_get_all_commodities_successfully() {
         // given
-        when(commodityDomainService.getCommodityById(1L)).thenReturn(commodity1);
+        when(commodityRepository.findAll()).thenReturn(Arrays.asList(commodity1, commodity2));
 
         // when
-        Commodity res = commodityService.getCommodityById(1L);
+        List<Commodity> commodities = commodityDomainService.getAllCommodity();
 
         // then
-        assertEquals("sku1", res.getSku());
-        assertEquals("title1", res.getTitle());
+        assertEquals(2, commodities.size());
     }
 
     @Test
-    void should_throw_exception_when_commodity_does_not_exist() {
+    void should_throw_exception_when_commodity_is_not_found() {
         // given
-        when(commodityDomainService.getCommodityById(1L)).thenThrow(CommodityNotFoundException.class);
+        when(commodityRepository.findById(1L)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(CommodityNotFoundException.class, () -> commodityService.getCommodityById(1L), "Commodity is not found by this id: 1");
+        assertThrows(CommodityNotFoundException.class, () -> commodityDomainService.getCommodityById(1L), "Commodity is not found by this id: 1");
     }
+
 
 }

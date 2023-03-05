@@ -7,7 +7,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class JwtUtilsTest {
 
-
     @Test
     void should_generate_token_successfully() {
         // given

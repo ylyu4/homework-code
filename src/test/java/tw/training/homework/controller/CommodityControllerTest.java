@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ShoppingController.class)
+@WebMvcTest(CommodityController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @AutoConfigureJsonTesters
-class ShoppingControllerTest {
+class CommodityControllerTest {
 
     @MockBean
     private CommodityService commodityService;
