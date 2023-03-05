@@ -52,7 +52,7 @@ public class AuthControllerTest {
 
         doNothing().when(authService).createNewAccount(any());
 
-        mockMvc.perform(post("/user/signup")
+        mockMvc.perform(post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isCreated());
@@ -64,7 +64,7 @@ public class AuthControllerTest {
 
         doThrow(new UsernameExistedException("This username: username is already registered.")).when(authService).createNewAccount(any());
 
-        mockMvc.perform(post("/user/signup")
+        mockMvc.perform(post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                         .andExpect(status().isBadRequest())
@@ -78,7 +78,7 @@ public class AuthControllerTest {
 
         doNothing().when(authService).createNewAccount(any());
 
-        mockMvc.perform(post("/user/signup")
+        mockMvc.perform(post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isBadRequest());
@@ -90,7 +90,7 @@ public class AuthControllerTest {
 
         doNothing().when(authService).createNewAccount(any());
 
-        mockMvc.perform(post("/user/signup")
+        mockMvc.perform(post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isBadRequest());
@@ -102,7 +102,7 @@ public class AuthControllerTest {
 
         when(authService.getTokenAfterLogin(any())).thenReturn(new TokenResponse("this is the token"));
 
-        mockMvc.perform(post("/user/login")
+        mockMvc.perform(get("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isOk())
@@ -116,7 +116,7 @@ public class AuthControllerTest {
 
         when(authService.getTokenAfterLogin(any())).thenThrow(new CustomerNotFoundException("This username: username is not registered yet."));
 
-        mockMvc.perform(post("/user/login")
+        mockMvc.perform(get("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isNotFound())
@@ -130,7 +130,7 @@ public class AuthControllerTest {
 
         when(authService.getTokenAfterLogin(any())).thenThrow(new CredentialsIncorrectException("The password is incorrect"));
 
-        mockMvc.perform(get("/user/login")
+        mockMvc.perform(get("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(accountRequest).getJson()))
                 .andExpect(status().isBadRequest())

@@ -15,7 +15,6 @@ import tw.training.homework.exception.CommodityNotFoundException;
 import tw.training.homework.exception.CustomerForbiddenActionException;
 import tw.training.homework.exception.OrderNotFoundException;
 import tw.training.homework.exception.OrderSubmitMultipleTimesException;
-import tw.training.homework.exception.UsernameExistedException;
 import tw.training.homework.model.request.CreateOrderRequest;
 import tw.training.homework.model.request.ShippingAddressRequest;
 import tw.training.homework.model.request.SubmitOrderRequest;
@@ -52,7 +51,7 @@ public class OrderControllerTest {
 
         doNothing().when(orderService).createOrder(any());
 
-        mockMvc.perform(post("/order/create")
+        mockMvc.perform(post("/orders/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(createOrderRequest).getJson()))
                         .andExpect(status().isCreated());
@@ -65,7 +64,7 @@ public class OrderControllerTest {
 
         doThrow(new CommodityNotFoundException("Commodity is not found by this id: 1")).when(orderService).createOrder(any());
 
-        mockMvc.perform(post("/order/create")
+        mockMvc.perform(post("/orders/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request.write(createOrderRequest).getJson()))
                 .andExpect(status().isNotFound())
@@ -81,7 +80,7 @@ public class OrderControllerTest {
 
         doNothing().when(orderService).createOrder(any());
 
-        mockMvc.perform(post("/order/submit")
+        mockMvc.perform(post("/orders/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(submitOrderRequest)))
                 .andExpect(status().isCreated());
@@ -92,9 +91,9 @@ public class OrderControllerTest {
 
         SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(1l, new ShippingAddressRequest("test", "test", "test"));
 
-        doThrow(new OrderNotFoundException("Can not find order by this Id: 1")).when(orderService).createOrder(any());
+        doThrow(new OrderNotFoundException("Can not find order by this Id: 1")).when(orderService).submitOrder(any());
 
-        mockMvc.perform(post("/order/submit")
+        mockMvc.perform(post("/orders/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(submitOrderRequest)))
                 .andExpect(status().isNotFound())
@@ -107,9 +106,9 @@ public class OrderControllerTest {
 
         SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(1l, new ShippingAddressRequest("test", "test", "test"));
 
-        doThrow(new CustomerForbiddenActionException("You can not modify other's order")).when(orderService).createOrder(any());
+        doThrow(new CustomerForbiddenActionException("You can not modify other's order")).when(orderService).submitOrder(any());
 
-        mockMvc.perform(post("/order/submit")
+        mockMvc.perform(post("/orders/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(submitOrderRequest)))
                 .andExpect(status().isForbidden())
@@ -122,9 +121,9 @@ public class OrderControllerTest {
 
         SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(1l, new ShippingAddressRequest("test", "test", "test"));
 
-        doThrow(new OrderSubmitMultipleTimesException("Order can not be submit for multiple times")).when(orderService).createOrder(any());
+        doThrow(new OrderSubmitMultipleTimesException("Order can not be submit for multiple times")).when(orderService).submitOrder(any());
 
-        mockMvc.perform(post("/order/submit")
+        mockMvc.perform(post("/orders/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(submitOrderRequest)))
                 .andExpect(status().isForbidden())
