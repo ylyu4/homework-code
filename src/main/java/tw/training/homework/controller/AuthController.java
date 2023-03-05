@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public TokenResponse login(@RequestBody AccountRequest accountRequest) {
+    public TokenResponse login(@RequestBody @Valid AccountRequest accountRequest) {
         return authService.getTokenAfterLogin(accountRequest);
     }
 

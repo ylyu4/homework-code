@@ -3,6 +3,7 @@ package tw.training.homework.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import tw.training.homework.exception.CustomerForbiddenActionException;
 import tw.training.homework.exception.OrderNotFoundException;
 import tw.training.homework.exception.OrderSubmitMultipleTimesException;
 import tw.training.homework.model.Commodity;
@@ -39,10 +40,14 @@ public class OrderService {
     }
 
     public void submitOrder(SubmitOrderRequest request) {
+        Customer customer = authUtils.getCurrentUser();
         Long orderId = request.getOrderId();
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() ->
                         new OrderNotFoundException(String.format("Can not find order by this Id: %s", orderId)));
+        if (!order.getCustomer().getId().equals(customer.getId())) {
+            throw new CustomerForbiddenActionException("You can not modify other's order");
+        }
         if (!order.getOrderStatus().equalsIgnoreCase(OrderStatus.CREATED.name())) {
             throw new OrderSubmitMultipleTimesException("Order can not be submit for multiple times");
         }

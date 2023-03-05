@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tw.training.homework.exception.CustomerForbiddenActionException;
 import tw.training.homework.exception.OrderNotFoundException;
 import tw.training.homework.exception.OrderSubmitMultipleTimesException;
 import tw.training.homework.model.Commodity;
@@ -20,6 +21,7 @@ import tw.training.homework.repository.OrderRepository;
 import tw.training.homework.service.domain.CommodityDomainService;
 import tw.training.homework.utils.AuthUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -70,8 +72,11 @@ class OrderServiceTest {
     void should_submit_order_successfully() {
         // given
         SubmitOrderRequest request = new SubmitOrderRequest(1L, new ShippingAddressRequest("test", "test", "test"));
-        Order order = new Order(2, 20, OrderStatus.CREATED);
+        Order order = new Order(1L, 2, 20, OrderStatus.CREATED.name(), null,  null, new Customer(1L, "username", "password", new ArrayList<>()));
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(authUtils.getCurrentUser()).thenReturn(new Customer(1L, "username", "password", new ArrayList<>()));
+
+
 
         // when
         orderService.submitOrder(request);
@@ -81,11 +86,28 @@ class OrderServiceTest {
     }
 
     @Test
-    void should_throw_exception_for_order_Can_not_submit_for_multiple_times() {
+    void should_throw_exception_for_order_is_not_create_by_current_user() {
         // given
         SubmitOrderRequest request = new SubmitOrderRequest(1L, new ShippingAddressRequest("test", "test", "test"));
-        Order order = new Order(2, 20, OrderStatus.UNPAID);
+        Order order = new Order(1L, 2, 20, OrderStatus.CREATED.name(), null,  null, new Customer(2L, "username", "password", new ArrayList<>()));
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(authUtils.getCurrentUser()).thenReturn(new Customer(1L, "username", "password", new ArrayList<>()));
+
+
+
+        //then
+        assertThrows(CustomerForbiddenActionException.class, () -> orderService.submitOrder(request), "You can not modify other's order");
+    }
+
+
+    @Test
+    void should_throw_exception_for_order_can_not_submit_for_multiple_times() {
+        // given
+        SubmitOrderRequest request = new SubmitOrderRequest(1L, new ShippingAddressRequest("test", "test", "test"));
+        Order order = new Order(1L, 2, 20, OrderStatus.UNPAID.name(), null,  null, new Customer(1L, "username", "password", new ArrayList<>()));
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(authUtils.getCurrentUser()).thenReturn(new Customer(1L, "username", "password", new ArrayList<>()));
+
 
 
         //then

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import tw.training.homework.exception.CommodityDuplicateException;
 import tw.training.homework.exception.CommodityNotFoundException;
 import tw.training.homework.exception.CredentialsIncorrectException;
+import tw.training.homework.exception.CustomerForbiddenActionException;
 import tw.training.homework.exception.ErrorBody;
 import tw.training.homework.exception.CustomerNotFoundException;
 import tw.training.homework.exception.OrderNotFoundException;
@@ -43,9 +44,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorBody> handle(OrderSubmitMultipleTimesException exception) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+    @ExceptionHandler({CustomerForbiddenActionException.class,
+                       OrderSubmitMultipleTimesException.class})
+    public ResponseEntity<ErrorBody> handleForbiddenException(Exception exception) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
         ErrorBody body = new ErrorBody(status.value(), exception.getMessage());
         return ResponseEntity.status(status).body(body);
     }
